@@ -34,10 +34,12 @@ while cap.isOpened():
             # print(obj.data)
         print(results.masks.data)
 
+        det = results.masks.data[0].numpy()
+
     if results.probs:
         print(results.probs)
 
-    cv2.imshow("frame", frame)
+    # cv2.imshow("frame", frame)
 
     if cv2.waitKey(1) == ord("q"):
         cap.release()
