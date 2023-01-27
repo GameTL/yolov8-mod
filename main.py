@@ -29,18 +29,18 @@ while cap.isOpened():
 
     cv2.putText(frame, "fps: " + str(round(1 / (time.time() - start), 2)), (10, int(cap.get(4)) - 10),
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-    print("fps: " + str(round(1 / (time.time() - start), 2)))
+    # print("fps: " + str(round(1 / (time.time() - start), 2)))
     start = time.time()
 
     results = model.predict(source=frame, conf=0.5, show=True)[0]
     if results.boxes:
-        print(f"DETECT {len(results.boxes)}")
+        # print(f"DETECT {len(results.boxes)}")
         output = dict()
         for i, obj in enumerate(results.boxes):
-            xywh = obj.xywhn.numpy()
-            name = datasets_names[int(obj.cls.numpy())
+            x,y,w,h = obj.xywhn.cpu().numpy()[0]
+            name = datasets_names[int(obj.cls.cpu().numpy())
                                   ] if datasets_names else 'unknown'
-            output[i] = {"class": name, "xywh": xywh}
+            output[i] = [name, x, y, w, h]
 
     print(output)
 
