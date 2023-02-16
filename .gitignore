@@ -1,3 +1,8 @@
+#Custom
+Basketball-1
+*.mp4
+.history
+.vscode
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

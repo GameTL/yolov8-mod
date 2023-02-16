@@ -13,14 +13,21 @@ from ultralytics.yolo.utils.torch_utils import guess_task_from_model_yaml, smart
 # Map head to model, trainer, validator, and predictor classes
 MODEL_MAP = {
     "classify": [
-        ClassificationModel, 'yolo.TYPE.classify.ClassificationTrainer', 'yolo.TYPE.classify.ClassificationValidator',
-        'yolo.TYPE.classify.ClassificationPredictor'],
+        ClassificationModel, 'yolo.TYPE.classify.ClassificationTrainer',
+        'yolo.TYPE.classify.ClassificationValidator',
+        'yolo.TYPE.classify.ClassificationPredictor'
+    ],
     "detect": [
-        DetectionModel, 'yolo.TYPE.detect.DetectionTrainer', 'yolo.TYPE.detect.DetectionValidator',
-        'yolo.TYPE.detect.DetectionPredictor'],
+        DetectionModel, 'yolo.TYPE.detect.DetectionTrainer',
+        'yolo.TYPE.detect.DetectionValidator',
+        'yolo.TYPE.detect.DetectionPredictor'
+    ],
     "segment": [
-        SegmentationModel, 'yolo.TYPE.segment.SegmentationTrainer', 'yolo.TYPE.segment.SegmentationValidator',
-        'yolo.TYPE.segment.SegmentationPredictor']}
+        SegmentationModel, 'yolo.TYPE.segment.SegmentationTrainer',
+        'yolo.TYPE.segment.SegmentationValidator',
+        'yolo.TYPE.segment.SegmentationPredictor'
+    ]
+}
 
 
 class YOLO:
@@ -29,7 +36,6 @@ class YOLO:
 
     A python interface which emulates a model-like behaviour by wrapping trainers.
     """
-
     def __init__(self, model='yolov8n.yaml', type="v8") -> None:
         """
         Initializes the YOLO object.
@@ -51,6 +57,8 @@ class YOLO:
         self.cfg = None  # if loaded from *.yaml
         self.ckpt_path = None
         self.overrides = {}  # overrides for trainer object
+        import os
+        os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
         # Load or create new YOLO model
         {'.pt': self._load, '.yaml': self._new}[Path(model).suffix](model)
@@ -131,7 +139,8 @@ class YOLO:
         overrides["conf"] = 0.25
         overrides.update(kwargs)
         overrides["mode"] = "predict"
-        overrides["save"] = kwargs.get("save", False)  # not save files by default
+        overrides["save"] = kwargs.get("save",
+                                       False)  # not save files by default
         if not self.predictor:
             self.predictor = self.PredictorClass(overrides=overrides)
             self.predictor.setup_model(model=self.model)
@@ -185,18 +194,24 @@ class YOLO:
         overrides = self.overrides.copy()
         overrides.update(kwargs)
         if kwargs.get("cfg"):
-            LOGGER.info(f"cfg file passed. Overriding default params with {kwargs['cfg']}.")
-            overrides = yaml_load(check_yaml(kwargs["cfg"]), append_filename=True)
+            LOGGER.info(
+                f"cfg file passed. Overriding default params with {kwargs['cfg']}."
+            )
+            overrides = yaml_load(check_yaml(kwargs["cfg"]),
+                                  append_filename=True)
         overrides["task"] = self.task
         overrides["mode"] = "train"
         if not overrides.get("data"):
-            raise AttributeError("Dataset required but missing, i.e. pass 'data=coco128.yaml'")
+            raise AttributeError(
+                "Dataset required but missing, i.e. pass 'data=coco128.yaml'")
         if overrides.get("resume"):
             overrides["resume"] = self.ckpt_path
 
         self.trainer = self.TrainerClass(overrides=overrides)
-        if not overrides.get("resume"):  # manually set model only if not resuming
-            self.trainer.model = self.trainer.get_model(weights=self.model if self.ckpt else None, cfg=self.model.yaml)
+        if not overrides.get(
+                "resume"):  # manually set model only if not resuming
+            self.trainer.model = self.trainer.get_model(
+                weights=self.model if self.ckpt else None, cfg=self.model.yaml)
             self.model = self.trainer.model
         self.trainer.train()
         # update model and cfg after training
