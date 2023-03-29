@@ -10,6 +10,7 @@ import json
 [X_RESOLUTION, Y_RESOLUTION, VIDEO_FPS] = [1280, 720, 30]
 
 model = YOLO("yolov8n-seg.pt")
+# model = YOLO("runs/detect/train/weights/best.pt")
 
 with open("ultralytics/yolo/data/datasets/coco8-seg.yaml", "r") as stream:
     try:
@@ -50,13 +51,13 @@ while cap.isOpened():
                 obj.cls.cpu().numpy())] if datasets_names else 'unknown'
             output[i] = [name, x, y, w, h]
     # print(json.dumps(output, indent=4))
-    print(output)
+        print(output)
     #TODO Work on this
 
     # cv2.imshow("frame", frame)
 
     if cv2.waitKey(1) == ord("q"):
-        cap.releas
+        cap.release()
 
 cv2.destroyAllWindows()
 """ 

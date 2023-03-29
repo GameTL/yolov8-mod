@@ -225,7 +225,8 @@ class YOLO:
         Args:
             device (str): device
         """
-        self.model.to(device)
+        # self.model.to(device)
+        self.model.to("device")
 
     def _guess_ops_from_task(self, task):
         model_class, train_lit, val_lit, pred_lit = MODEL_MAP[task]
