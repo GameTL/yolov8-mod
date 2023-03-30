@@ -1,7 +1,11 @@
+
+#* ---------------------- IMPORTS ---------------------- #
 from ultralytics import YOLO
 import cv2
 import time
 
+
+#* ---------------------- FUNCTIONS ---------------------- #
 #Drawing a crosshair
 def crosshair(
                 x,
@@ -28,6 +32,8 @@ def crosshair(
         print(f"({xp}, {yp})")
 
 
+
+
 start = time.time()
 
 model = YOLO("basketball_train_4/runs/segment/train/weights/best.pt")
@@ -38,7 +44,11 @@ model = YOLO("basketball_train_4/runs/segment/train/weights/best.pt")
 # cap = cv2.VideoCapture(0)
 
 # For video input:
-cap = cv2.VideoCapture("basketball_train_4/4k60_1.mp4")
+cap = cv2.VideoCapture("basketball_train_4/1080p120_1.mp4")
+
+
+
+#* ---------------------- MAIN ---------------------- #
 
 X_RESOLUTION = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 Y_RESOLUTION = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -69,10 +79,11 @@ try:
         # Predict with Yolov8
         results = model.predict(source=frame, conf=0.5, show=True)[0]
         # if detected object, draw crosshair on the frame
-        if results.boxes:
-            for i, obj in enumerate(results.boxes):
-                x, y, w, h = obj.xywhn.cpu().numpy()[0]
-                crosshair(x,y)
+        # if results.boxes:
+        #     for i, obj in enumerate(results.boxes):
+        #         x, y, w, h = obj.xywhn.cpu().numpy()[0]
+        #         print(x,y)
+        #         crosshair(x,y)
 
 
         # Push the frame on the screen
