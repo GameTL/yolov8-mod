@@ -140,7 +140,6 @@ wandb/
 .DS_Store
 
 # Neural Network weights -----------------------------------------------------------------------------------------------
-*.pt
 *.pb
 *.onnx
 *.engine
@@ -152,3 +151,9 @@ wandb/
 *_web_model/
 *_openvino_model/
 *_paddle_model/
+yolov8l-seg.pt
+.gitignore
+yolov8n.pt
+yolov8m-seg.pt
+.gitignore
+yolov8s-seg.pt
